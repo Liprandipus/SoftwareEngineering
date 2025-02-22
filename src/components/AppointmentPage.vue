@@ -36,7 +36,11 @@
 <form class = "right-container">
   <div class ="mb-3"> 
     <p><b>Continue as guest</b></p>
-    <button type="guest" class ="btn btn-primary">Guest</button>
+    <router-link to="/Appointment/Book" custom v-slot="{ navigate }">
+  <button @click="navigate" class="btn btn-primary">
+    Guest
+  </button>
+</router-link>
 </div>
 </form>
 

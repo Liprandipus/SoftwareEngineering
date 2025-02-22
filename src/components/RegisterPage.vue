@@ -4,8 +4,9 @@
 
 
 
-<script>
 
+
+<script>
 export default {
   name: 'RegisterPage'  // Needs to be two words
 };

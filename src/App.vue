@@ -8,11 +8,3 @@ export default {
   name: 'App'
 };
 </script>
-
-
-<style>
-h2 {
-  font-family: Calibri;
-  color: #4CAF50;
-}
-</style>

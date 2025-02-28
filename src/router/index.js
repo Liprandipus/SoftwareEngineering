@@ -11,12 +11,12 @@ const routes = [
         component: LoginPage
     },
     {
-        path: '/welcome',  // Home page
+        path: '/welcome',
         name: 'WelcomePage',
         component: WelcomePage
     },
     {
-        path: '/appointment',  // route for appointment page
+        path: '/appointment',
         name: 'Appointment',
         component: AppointmentPage
     },

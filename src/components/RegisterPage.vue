@@ -12,8 +12,13 @@
     <input type="password" class="form-control" id="InputPassword" v-model="password">
     <br><br>
     <button type="submit" class="btn btn-primary" @click="submitForm">Submit</button>
+    <br><br>
+    <p><b>Back to login:</b></p>
+    <router-link to="/">
+      <button class="btn btn-primary">Login</button>
+    </router-link>
     <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
-
+    <p v-if="successMessage" style="color: green;">{{ successMessage }}</p>
   </div>
 </template>
 
@@ -51,7 +56,7 @@ export default {
 
 <style>
 h2 {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Carlito', sans-serif;
   font-size: 28px;
   text-transform: capitalize;
 }

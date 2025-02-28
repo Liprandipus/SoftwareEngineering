@@ -13,15 +13,17 @@
     <br><br>
     <button type="submit" class="btn btn-primary" @click="submitForm">Submit</button>
     <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
-
-    <p><b>Continue as guest:</b></p>
-    <router-link to="/Welcome">
-      <button class="btn btn-primary">Guest</button>
-    </router-link>
-
-    <p><b>Don't have an account? </b></p>
-    <router-link to="/Register">
+    <br><br>
+    <b>Don't have an account? </b>
+    <br><br>
+    <router-link to="/register">
       <button class="btn btn-primary">Register</button>
+    </router-link>
+    <br><br>Or<br><br>
+    <b>Continue as guest:</b>
+    <br><br>
+    <router-link to="/welcome">
+      <button class="btn btn-primary">Guest</button>
     </router-link>
   </div>
 </template>
@@ -51,7 +53,7 @@ export default {
         alert('Login has been successful!'); // Replace with actual login logic
 
         // Redirect using Vue Router
-        this.$router.push('/Welcome');
+        this.$router.push('/welcome');
       }
     }
   }
@@ -60,7 +62,7 @@ export default {
 
 <style>
 h2 {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Carlito', sans-serif;
   font-size: 28px;
   text-transform: capitalize;
 }

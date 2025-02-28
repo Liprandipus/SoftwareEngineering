@@ -57,7 +57,7 @@
     </div>
 
     <br><br>
-    <router-link to="/Welcome">Back to Homepage</router-link>
+    <router-link to="/welcome">Back to Homepage</router-link>
   </div>
 </template>
 
@@ -129,7 +129,7 @@ export default {
 
 <style scoped>
 h2 {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Carlito', sans-serif;
   font-size: 28px;
   text-transform: capitalize;
 }

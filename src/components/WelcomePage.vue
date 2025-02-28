@@ -8,7 +8,7 @@
 
     <h3>Click to book:</h3>
     <!-- router link to go to appointment page-->
-    <router-link to="/Appointment">Book Appointment</router-link>
+    <router-link to="/appointment">Book Appointment</router-link>
     <br><br>
     <h3>Go back to Login Page:</h3>
     <router-link to="/">Login</router-link>
@@ -26,7 +26,7 @@ export default {
 
 <style>
 h2 {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Carlito', sans-serif;
   font-size: 28px;
   text-transform: capitalize;
 }

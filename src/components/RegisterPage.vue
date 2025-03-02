@@ -29,13 +29,13 @@ export default {
     return {
       email: '',
       password: '',
-      errorMessage: ''
+      errorMessage: '',
+      successMessage: ''
     };
   },
   methods: {
-    submitForm() {
-      // Correct email validation regex pattern:
-      // ( [^\s@]+ = username, @, \., [^\s@]+ = at least one valid character,  $ = end)
+
+    async submitForm() {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!this.email || !this.password) {
@@ -44,10 +44,38 @@ export default {
         this.errorMessage = 'Enter a valid email address.';
       } else {
         this.errorMessage = '';
-        alert('Login has been successful!'); // Replace with actual login logic
 
-        // Redirect using Vue Router
-        this.$router.push('/Welcome');
+        try {
+          const response = await fetch('http://localhost:3000/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: this.email,
+              password: this.password,
+            }),
+          });
+
+          const data = await response.json();
+          console.log('Server response:', data);
+
+          if (response.ok) {
+            this.successMessage = 'Registration successful!';
+            this.errorMessage = '';
+
+            setTimeout(() => {
+              this.$router.push('/');
+            }, 2000);
+          } else {
+            this.errorMessage = data.message || 'Registration failed';
+            this.successMessage = '';
+          }
+        } catch (error) {
+          console.error('Error during registration:', error);
+          this.errorMessage = 'An error occurred during registration';
+          this.successMessage = '';
+        }
       }
     }
   }

@@ -39,9 +39,7 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      // Correct email validation regex pattern:
-      // ( [^\s@]+ = username, @, \., [^\s@]+ = at least one valid character,  $ = end)
+    async submitForm() {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!this.email || !this.password) {
@@ -50,10 +48,33 @@ export default {
         this.errorMessage = 'Enter a valid email address.';
       } else {
         this.errorMessage = '';
-        alert('Login has been successful!'); // Replace with actual login logic
 
-        // Redirect using Vue Router
-        this.$router.push('/welcome');
+        try {
+
+          const response = await fetch('http://localhost:3000/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: this.email,
+              password: this.password,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+
+            this.$router.push('/welcome');
+          } else {
+
+            this.errorMessage = data.message || 'Login failed';
+          }
+        } catch (error) {
+          console.error('Error during login:', error);
+          this.errorMessage = 'An error occurred during login';
+        }
       }
     }
   }

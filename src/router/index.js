@@ -17,12 +17,12 @@ const routes = [
     },
     {
         path: '/appointment',
-        name: 'Appointment',
+        name: 'AppointmentPage',
         component: AppointmentPage
     },
     {
         path:  '/register',
-        name : 'Register',
+        name : 'RegisterPage',
         component: RegisterPage
     }
 ]

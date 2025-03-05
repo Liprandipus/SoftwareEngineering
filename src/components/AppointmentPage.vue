@@ -2,59 +2,47 @@
   <div class="appointment-form" style="text-align: center;">
     <h1><b>Appointment Page</b></h1>
     <img src="../assets/inside.png" style="width: 500px; height: 300px;">
-    <p>Book your visit here!</p>
+    <p>Book your visit here,  {{username }} !</p>
 
-    <!-- Επιλογή Παροχής -->
     <div class="form-group">
-      <label for="service">Παροχή:</label>
+      <label for="service">Service: </label>
       <select id="service" v-model="selectedService">
-        <option disabled value="">Επιλέξτε μια παροχή</option>
+        <option disabled value="">Select Service:</option>
         <option v-for="service in services" :key="service" :value="service">
           {{ service }}
         </option>
       </select>
     </div>
-
-    <!-- Επιλογή Ημερομηνίας -->
+    <br>
     <div class="form-group">
-      <label for="date">Ημερομηνία:</label>
+      <label for="date">Date: </label>
       <input type="date" id="date" v-model="selectedDate" :min="minDate" :max="maxDate"/>
     </div>
-
-    <!-- Επιλογή Ώρας -->
+    <br>
     <div class="form-group">
-      <label for="time">Ώρα:</label>
+      <label for="time">Time: </label>
       <select id="time" v-model="selectedTime">
-        <option disabled value="">Επιλέξτε ώρα</option>
+        <option disabled value="">Select Hour</option>
         <option v-for="time in availableTimes" :key="time" :value="time">
           {{ time }}
         </option>
       </select>
     </div>
-
-    <!-- Επιλογή Κουρέα -->
+    <br>
     <div class="form-group">
-      <label for="barber">Κουρέας:</label>
+      <label for="barber">Barber: </label>
       <select id="barber" v-model="selectedBarber">
-        <option disabled value="">Επιλέξτε κουρέα</option>
+        <option disabled value="">Select Barber:</option>
         <option v-for="barber in barbers" :key="barber" :value="barber">
           {{ barber }}
         </option>
       </select>
     </div>
-
     <br>
-    <!-- Κουμπί Υποβολής -->
     <button @click="submitForm" class="submit-button">Book</button>
 
-    <!-- Εμφάνιση των Επιλογών -->
-    <div v-if="submitted" class="confirmation">
-      <h2>Επιβεβαίωση Ραντεβού</h2>
-      <p><strong>Παροχή:</strong> {{ selectedService }}</p>
-      <p><strong>Ημερομηνία:</strong> {{ selectedDate }}</p>
-      <p><strong>Ώρα:</strong> {{ selectedTime }}</p>
-      <p><strong>Κουρέας:</strong> {{ selectedBarber }}</p>
-    </div>
+    <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
+    <p v-if="successMessage" style="color: green;">{{ successMessage }}</p>
 
     <br><br>
     <router-link to="/welcome">Back to Homepage</router-link>
@@ -65,41 +53,39 @@
 export default {
   data() {
     return {
-      // Διαθέσιμες Παροχές
-      services: ["Κούρεμα", "Ξύρισμα", "Πλύσιμο", "Βάψιμο"],
-      selectedService: "", // Επιλεγμένη Παροχή
+      userEmail:'',
+      services: ["Haircut - 15€", "Shaving - 5€", "Hair dyeing - 8€"],
+      selectedService: "",
 
-      // Ημερομηνία
-      selectedDate: "", // Επιλεγμένη Ημερομηνία
-      minDate: new Date().toISOString().split("T")[0], // Σημερινή ημερομηνία
-      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-          .toISOString()
-          .split("T")[0], // Μέχρι 1 χρόνο από σήμερα
+      selectedDate: "",
+      minDate: new Date().toISOString().split("T")[0],
+      maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0],
 
-      // Ώρα
-      selectedTime: "", // Επιλεγμένη Ώρα
-      availableTimes: [], // Διαθέσιμες Ώρες
+      selectedTime: "",
+      availableTimes: [],
 
-      // Διαθέσιμοι Κουρείς
-      barbers: ["Γιάννης", "Μαρία", "Κώστας", "Ελένη"],
-      selectedBarber: "", // Επιλεγμένος Κουρέας
+      barbers: ["John", "Nasia", "Jim", "Mary"],
+      selectedBarber: "",
 
-      // Κατάσταση Υποβολής
-      submitted: false,
+      errorMessage: '',
+      successMessage: '',
+   
     };
   },
+  created(){
+    this.userEmail = localStorage.getItem('userEmail') || '';
+    this.username = this.userEmail.split('@')[0];
+  },
   watch: {
-    // Όταν αλλάζει η ημερομηνία, ενημερώνονται οι διαθέσιμες ώρες
     selectedDate() {
       this.generateAvailableTimes();
     },
   },
   methods: {
-    // Δημιουργία διαθέσιμων ωρών
     generateAvailableTimes() {
-      const startTime = 9; // 9:00 π.μ.
-      const endTime = 21; // 9:00 μ.μ.
-      const interval = 30; // Κάθε 30 λεπτά
+      const startTime = 9;
+      const endTime = 21;
+      const interval = 30;
 
       this.availableTimes = [];
       for (let hour = startTime; hour < endTime; hour++) {
@@ -110,45 +96,51 @@ export default {
       }
     },
 
-    // Υποβολή Φόρμας
-    submitForm() {
-      if (
-          this.selectedService &&
-          this.selectedDate &&
-          this.selectedTime &&
-          this.selectedBarber
-      ) {
-        this.submitted = true; // Εμφάνιση επιβεβαίωσης
-      } else {
-        alert("Παρακαλώ συμπληρώστε όλα τα πεδία!");
+    async submitForm() {
+      if (!this.selectedService || !this.selectedDate || !this.selectedTime || !this.selectedBarber) {
+        this.errorMessage = "Please fill in all the fields!";
+        return;
       }
-    },
-  },
+
+      try {
+       
+        const userEmail = localStorage.getItem('userEmail');
+
+        if (!userEmail) {
+          this.errorMessage = 'User not logged in.';
+          return;
+        }
+
+        const response = await fetch('http://localhost:3000/api/auth/appointment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service: this.selectedService,
+            date: this.selectedDate,
+            time: this.selectedTime,
+            barber: this.selectedBarber,
+            email: userEmail 
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Booking failed');
+        }
+
+        this.successMessage = data.message;
+        this.errorMessage = '';
+
+        setTimeout(() => {
+          window.location.href = 'http://localhost:8080/welcome';
+        }, 1500);
+
+      } catch (error) {
+        this.errorMessage = error.message;
+        this.successMessage = '';
+      }
+    }
+  }
 };
 </script>
-
-<style scoped>
-h2 {
-  font-family: 'Carlito', sans-serif;
-  font-size: 28px;
-  text-transform: capitalize;
-}
-
-.custom-container {
-  margin-left: 300px;
-  text-align: left;
-}
-
-.center-container {
-  margin-top: -115px;
-  text-align: top;
-  margin-left: -350px;
-}
-
-.right-container {
-  margin-right: 800px;
-  text-align: right;
-  margin-top: -70px;
-
-}
-</style>

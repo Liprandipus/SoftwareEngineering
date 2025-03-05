@@ -1,6 +1,6 @@
 <template>
   <div style="text-align: center;">
-    <h1>Welcome to Lupi's Barbershop</h1>
+    <h1>Welcome to Lupi's Barbershop, {{username }} !</h1>
     <p>Book your appointment right now!</p>
 
     <!-- image from /assets -->
@@ -18,10 +18,17 @@
 <script>
 export default {
   name: 'WelcomePage',
-  props: {
-    msg: String
+  data() {
+    return {
+      userEmail: '' 
+    };
+  },
+  created() {
+  
+    this.userEmail = localStorage.getItem('userEmail') || '';
+    this.username = this.userEmail.split('@')[0];
   }
-}
+};
 </script>
 
 <style>
@@ -31,4 +38,3 @@ h2 {
   text-transform: capitalize;
 }
 </style>
-

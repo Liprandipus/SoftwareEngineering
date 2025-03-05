@@ -50,7 +50,6 @@ export default {
         this.errorMessage = '';
 
         try {
-         
           const response = await fetch('http://localhost:3000/api/auth/login', {
             method: 'POST',
             headers: {
@@ -66,6 +65,9 @@ export default {
 
           if (response.ok) {
             
+            localStorage.setItem('userEmail', this.email);
+
+           
             this.$router.push('/welcome');
           } else {
             

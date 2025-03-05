@@ -31,53 +31,55 @@ export default {
       password: '',
       errorMessage: '',
       successMessage: ''
+      
     };
   },
+  
   methods: {
-   
-async submitForm() {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!this.email || !this.password) {
-    this.errorMessage = 'Email and Password are both required.';
-  } else if (!emailPattern.test(this.email)) {
-    this.errorMessage = 'Enter a valid email address.';
-  } else {
-    this.errorMessage = '';
+    async submitForm() {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: this.email,
-          password: this.password,
-        }),
-      });
-
-      const data = await response.json();
-      console.log('Server response:', data); 
-
-      if (response.ok) {
-        this.successMessage = 'Registration successful!';
-        this.errorMessage = '';
-       
-        setTimeout(() => {
-          this.$router.push('/');
-        }, 2000);
+      if (!this.email || !this.password) {
+        this.errorMessage = 'Email and Password are both required.';
+      } else if (!emailPattern.test(this.email)) {
+        this.errorMessage = 'Enter a valid email address.';
       } else {
-        this.errorMessage = data.message || 'Registration failed';
-        this.successMessage = '';
+        this.errorMessage = '';
+
+        try {
+          const response = await fetch('http://localhost:3000/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: this.email,
+              password: this.password,
+            }),
+          });
+
+          const data = await response.json();
+          console.log('Server response:', data);
+
+          if (response.ok) {
+            this.successMessage = 'Registration successful!';
+            this.errorMessage = '';
+
+            setTimeout(() => {
+              this.$router.push('/');
+            }, 2000);
+          } else {
+            this.errorMessage = data.message || 'Registration failed';
+            this.successMessage = '';
+          }
+        } catch (error) {
+          console.error('Error during registration:', error);
+          this.errorMessage = 'An error occurred during registration';
+          this.successMessage = '';
+        }
       }
-    } catch (error) {
-      console.error('Error during registration:', error);
-      this.errorMessage = 'An error occurred during registration';
-      this.successMessage = '';
     }
-  }
-}
   }
 };
 </script>

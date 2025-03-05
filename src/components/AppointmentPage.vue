@@ -2,7 +2,7 @@
   <div class="appointment-form" style="text-align: center;">
     <h1><b>Appointment Page</b></h1>
     <img src="../assets/inside.png" style="width: 500px; height: 300px;">
-    <p>Book your visit here,  {{username }} !</p>
+    <p>Book your visit here,  {{username }}</p>
 
     <div class="form-group">
       <label for="service">Service: </label>
@@ -69,7 +69,7 @@ export default {
 
       errorMessage: '',
       successMessage: '',
-   
+
     };
   },
   created(){
@@ -103,7 +103,7 @@ export default {
       }
 
       try {
-       
+
         const userEmail = localStorage.getItem('userEmail');
 
         if (!userEmail) {
@@ -119,7 +119,7 @@ export default {
             date: this.selectedDate,
             time: this.selectedTime,
             barber: this.selectedBarber,
-            email: userEmail 
+            email: userEmail
           })
         });
 

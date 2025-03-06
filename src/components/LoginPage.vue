@@ -19,12 +19,6 @@
     <router-link to="/register">
       <button class="btn btn-primary">Register</button>
     </router-link>
-    <br><br>Or<br><br>
-    <b>Continue as guest:</b>
-    <br><br>
-    <router-link to="/welcome">
-      <button class="btn btn-primary">Guest</button>
-    </router-link>
   </div>
 </template>
 
@@ -64,13 +58,13 @@ export default {
           const data = await response.json();
 
           if (response.ok) {
-            
+
             localStorage.setItem('userEmail', this.email);
 
-           
+
             this.$router.push('/welcome');
           } else {
-            
+
             this.errorMessage = data.message || 'Login failed';
           }
         } catch (error) {

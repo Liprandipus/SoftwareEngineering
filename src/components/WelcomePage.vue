@@ -1,6 +1,6 @@
 <template>
   <div style="text-align: center;">
-    <h1>Welcome to Lupi's Barbershop, {{username }} !</h1>
+    <h1>Welcome to Lupi's Barbershop, {{username }}</h1>
     <p>Book your appointment right now!</p>
 
     <!-- image from /assets -->
@@ -20,11 +20,11 @@ export default {
   name: 'WelcomePage',
   data() {
     return {
-      userEmail: '' 
+      userEmail: ''
     };
   },
   created() {
-  
+
     this.userEmail = localStorage.getItem('userEmail') || '';
     this.username = this.userEmail.split('@')[0];
   }

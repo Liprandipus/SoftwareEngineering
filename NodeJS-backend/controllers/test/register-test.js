@@ -6,11 +6,12 @@ const sinon = require('sinon');
 const expect = chai.expect;
 const db = require('../../db');
 const registerController = require('../regController');
+
 describe('Register Controller', () => {
     let req, res, stub;
 
     beforeEach(() => {
-        req = { body: { email: 'user1@gmail.com', password: 'user1' } };
+        req = { body: { email: 'test@example.gr', password: '12345' } };
         res = {
             status: sinon.stub().returnsThis(),
             json: sinon.stub().returnsThis()
@@ -23,7 +24,7 @@ describe('Register Controller', () => {
     });
 
     it('should return 400 if email already exists', async () => {
-        stub.onFirstCall().yields(null, [{ email: 'user1@gmail.com' }]);
+        stub.onFirstCall().yields(null, [{ email: 'test@example.gr' }]);
 
         await registerController.register(req, res);
 

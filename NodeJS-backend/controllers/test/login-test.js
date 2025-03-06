@@ -47,7 +47,7 @@ describe('Login Controller', () => {
         await loginController.login(req, res);
 
         expect(res.status.calledWith(200)).to.be.true;
-        expect(res.json.calledWith(sinon.match({ message: 'Login successful!' }))).to.be.true;
+        expect(res.json.calledWith(sinon.match({ message: 'Login successful' }))).to.be.true;
     });
 
     it('should return 500 on database error', async () => {

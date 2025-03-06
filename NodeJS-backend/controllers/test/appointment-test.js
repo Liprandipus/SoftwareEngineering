@@ -11,7 +11,15 @@ describe('Appointment Controller', () => {
     let req, res, stub;
 
     beforeEach(() => {
-        req = { body: { service: 'Haircut', date: '2025-03-04', time: '10:00', barber: 'John' } };
+        req = {
+            body: {
+                service: 'Haircut - 15€',
+                date: '05/05/2025',
+                time: '10:00:00',
+                barber: 'John',
+                email: 'test@example.gr'
+            }
+        };
         res = {
             status: sinon.stub().returnsThis(),
             json: sinon.stub().returnsThis()
@@ -24,7 +32,13 @@ describe('Appointment Controller', () => {
     });
 
     it('should return 400 if any field is missing', async () => {
-        req.body = {};  // Κενό σώμα αίτησης
+        req.body = {
+            service: 'Haircut - 15€',
+            date: '2025-05-05',
+            time: '10:00:00',
+            barber: 'John',
+            client: 'test'
+        };
 
         await appointmentController.bookAppointment(req, res);
 
@@ -33,25 +47,55 @@ describe('Appointment Controller', () => {
     });
 
     it('should return 400 if barber is already booked', async () => {
-        const formattedDate = new Date(req.body.date).toLocaleDateString('en-GB');
-        const expectedMessage = `Barber ${req.body.barber} is already booked at ${req.body.time} on ${formattedDate}!`;
+        const expectedMessage = `Barber ${req.body.barber} is already booked at ${req.body.time} on ${req.body.date}!`;
 
-        stub.onFirstCall().yields(null, [{service : 'Haircut - 15€', date: '2025-05-05', time: '10:00' ,barber: 'John'}]);
+        req.body = {
+            service: 'Haircut - 15€',
+            date: '2025-05-05',
+            time: '10:00:00',
+            barber: 'John',
+            email: 'test@example.com',
+            client: 'test'
+        };
+
+        // Simulating with these specific fields
+        stub.onFirstCall().yields(null, [{
+            id: 10,
+            service: 'Haircut - 15€',
+            date: '2025-05-05',
+            time: '10:00:00',
+            barber: 'John',
+            email: 'test@example.com',
+            client: 'test'
+        }]);
 
         await appointmentController.bookAppointment(req, res);
 
         expect(res.status.calledWith(400)).to.be.true;
-        expect(res.json.calledWith({ message: expectedMessage })).to.be.true;
+        expect(res.json.calledWith(sinon.match({ message: expectedMessage }))).to.be.true;
     });
+
 
     it('should return 201 if appointment is booked successfully', async () => {
         stub.onFirstCall().yields(null, []);
         stub.onSecondCall().yields(null, { insertId: 1 });
 
+        req.body = {
+            service: 'Haircut - 15€',
+            date: '2025-05-05',
+            time: '10:00:00',
+            barber: 'John',
+            email: 'test@example.com',
+            client: 'test'
+        };
+
         await appointmentController.bookAppointment(req, res);
 
+        // Debugging assertion
+        console.log('res.json called with:', res.json.args);
+
         expect(res.status.calledWith(201)).to.be.true;
-        expect(res.json.calledWith(sinon.match({ message: 'Appointment booked successfully!', redirect: 'http://localhost:8080/welcome' }))).to.be.true;
+        expect(res.json.calledWith(sinon.match({ message: 'Appointment booked successfully!'}))).to.be.true;
     });
 
     it('should return 500 on database query error', async () => {

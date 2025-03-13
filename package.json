@@ -18,7 +18,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mysql2": "^3.12.0",
+    "mysql2": "^3.13.0",
+    "sequelize": "^6.37.6",
     "vue": "^3.2.26",
     "vue-router": "^4.5.0"
   },
@@ -28,7 +29,7 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
-    "chai": "^4.3.8",
+    "chai": "^4.5.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "mocha": "^11.1.0",

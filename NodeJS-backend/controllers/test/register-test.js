@@ -1,14 +1,11 @@
-// Two common testing libraries chai and sinon,
-// Chai helps you check if your code behaves correctly,
-// sinon test functions and how they are used
 const chai = require('chai');
 const sinon = require('sinon');
 const expect = chai.expect;
-const db = require('../../db');
+const User = require("../../Sequelize-ORM/models/user");
 const registerController = require('../regController');
 
 describe('Register Controller', () => {
-    let req, res, stub;
+    let req, res, findOneStub, createStub;
 
     beforeEach(() => {
         req = { body: { email: 'test@example.gr', password: '12345' } };
@@ -16,15 +13,17 @@ describe('Register Controller', () => {
             status: sinon.stub().returnsThis(),
             json: sinon.stub().returnsThis()
         };
-        stub = sinon.stub(db, 'query');
+        findOneStub = sinon.stub(User, 'findOne');
+        createStub = sinon.stub(User, 'create');
     });
 
     afterEach(() => {
-        stub.restore();
+        findOneStub.restore();
+        createStub.restore();
     });
 
     it('should return 400 if email already exists', async () => {
-        stub.onFirstCall().yields(null, [{ email: 'test@example.gr' }]);
+        findOneStub.resolves({ email: 'test@example.gr' });
 
         await registerController.register(req, res);
 
@@ -33,8 +32,8 @@ describe('Register Controller', () => {
     });
 
     it('should return 201 if user is registered successfully', async () => {
-        stub.onFirstCall().yields(null, []);
-        stub.onSecondCall().yields(null, { insertId: 1 });
+        findOneStub.resolves(null);
+        createStub.resolves({ id: 1, email: 'test@example.gr', password: '12345' });
 
         await registerController.register(req, res);
 
@@ -43,7 +42,7 @@ describe('Register Controller', () => {
     });
 
     it('should return 500 on database query error', async () => {
-        stub.onFirstCall().yields(new Error('Database query error'));
+        findOneStub.rejects(new Error('Database query error'));
 
         await registerController.register(req, res);
 
@@ -52,8 +51,8 @@ describe('Register Controller', () => {
     });
 
     it('should return 500 on insert user error', async () => {
-        stub.onFirstCall().yields(null, []);
-        stub.onSecondCall().yields(new Error('Insert user error'));
+        findOneStub.resolves(null);
+        createStub.rejects(new Error('Insert user error'));
 
         await registerController.register(req, res);
 

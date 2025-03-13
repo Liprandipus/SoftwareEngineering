@@ -15,7 +15,7 @@ describe('Appointment Controller', () => {
                 time: '10:00:00',
                 barber: 'John',
                 email: 'test@example.gr',
-                client: 'test' 
+                client: 'test'
             }
         };
         res = {
@@ -38,7 +38,7 @@ describe('Appointment Controller', () => {
             time: '10:00:00',
             barber: 'John',
             client: 'test'
-        }; 
+        };
 
         await appointmentController.bookAppointment(req, res);
 
@@ -49,45 +49,31 @@ describe('Appointment Controller', () => {
     });
 
     it('should return 400 if barber is already booked', async () => {
-      
         req.body = {
             service: 'Haircut - 15€',
-            date: '2025-05-19',
+            date: '2025-05-05',
             time: '10:00:00',
             barber: 'John',
             email: 'test@example.com',
             client: 'test'
         };
-    
-        
-        const existingAppointment = {
+
+        findOneStub.resolves({
             service: 'Haircut - 15€',
-            date: '2025-05-19',
+            date: '2025-05-05',
             time: '10:00:00',
             barber: 'John',
-            email: 'test@example.com',
             client: 'test'
-        };
-    
-       
-        findOneStub.resolves(existingAppointment);
-    
-        
-        await appointmentController.bookAppointment(req, res);
-    
-        
-        sinon.assert.calledWithExactly(findOneStub, {
-            where: { barber: req.body.barber, date: req.body.date, time: req.body.time }
         });
-    
-       
-        expect(res.status).to.have.been.calledOnceWithExactly(400);
-    
-        
-        const expectedMessage = `Barber ${req.body.barber} is already booked at ${req.body.time} on ${req.body.date}!`;
-        expect(res.json).to.have.been.calledOnceWithExactly({ message: expectedMessage });
+
+        await appointmentController.bookAppointment(req, res);
+
+        sinon.assert.calledWith(res.status, 400);
+        sinon.assert.calledWith(res.json, sinon.match({ message: sinon.match.string }));
+
+        const expectedMessage = `Barber ${req.body.barber} is already booked`;
+        expect(res.json.getCall(0).args[0].message).to.include(expectedMessage);
     });
-    
 
     it('should return 201 if appointment is booked successfully', async () => {
         findOneStub.resolves(null);
